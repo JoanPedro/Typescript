@@ -1,0 +1,12 @@
+-> interface Todo {
+  id: number;
+  name: string;
+}
+
+- Interface serve para definir os tipos de uma estrutura/objeto. Ajudará bastante
+quando estiver a utilizar um objeto/estrutura e por ventura errar alguma propriedade.
+
+Exemplo: const todo = response.data as Todo.
+Desta forma, você terá um: todo.id e um todo.name!
+
+________________________________________________________________________________
