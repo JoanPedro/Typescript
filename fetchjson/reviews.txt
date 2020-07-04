@@ -123,5 +123,6 @@ o que está sendo desestruturado: 'date e weather'. Definindo seus tipo:
   - date: Date,
   - weather: string.
 
---- 
+________________________________________________________________________________
 
+-> Objeto
