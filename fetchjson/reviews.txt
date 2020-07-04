@@ -10,3 +10,118 @@ Exemplo: const todo = response.data as Todo.
 Desta forma, você terá um: todo.id e um todo.name!
 
 ________________________________________________________________________________
+
+-> Function
+
+const add = (a: number, b: number): number => {
+  return a + b
+};
+
+- (a: number, b: number) => Declaração dos tipos dos Argumentos da função;
+- :number => Declaração do tipo do Retorno da função.
+
+---
+
+const multiple: (a: number, b: number) => number = (a: number, b: number) => {
+  return a * b;
+}
+
+- :(a: number, b: number) => number --> Declaração do tipo da variável que será
+uma função que terá como argumentos (a: number, b: number) e retorno um tipo Number.
+
+---
+
+const types = (a: number, b: number) => {
+  return a + b;
+};
+
+- Apesar de não informar ao typescrit o tipe do retorno da função, ele automaticamente
+irá verificar o tipo passado pelo return e atribui-lo à inferência da função. Que 
+neste caso é um tipo number. Mas, caso fossse " return 'Olá' ", o tipo da função
+passaria a ser string e não mais number.
+
+---
+
+const subtract = (a: number, b: number) => {
+  a - b;
+}
+
+- Desta forma, a função subtract somente terá seus argumentos tipados, retornando
+um tipo void para a função. O Typescript precisa de um retorno implícito para validar
+exatamente qual o tipo do retorno da função.
+
+---
+
+const logger = (message: string): void => {
+  console.log(message);
+}
+
+- Desta forma, a função logger irá retornar intrisicamente um tipo void, ou seja,
+sem retorno. Mas, pode ser definido um retorno do tipo: " return null ou undefined".
+Uma função que retorna VOID não pode ter um retorno tipado: "return 'algo' ou return 2".
+
+---
+
+const throwError = (message: string): never => {
+  throw new Error(message);
+};
+
+- Desta forma, uma função com um retorno tipado com 'never', terá seu retorno nunca lido.
+Ou seja, a partir do momento que lançar o error, a função nunca será completada.
+
+OBS. Caso condicionalmente seja necessário lançar um Error, defina a função como string:
+
+const throwError = (message: string): string => {
+  if(!message) {
+    throw new Error(message);
+  }
+  
+  return message;
+};
+
+--- 
+
+Interface de Funções
+
+-> Objeto Literal:
+
+const todayWeather = {
+  date: new Date(),
+  weather: 'Sunny'
+}
+
+* Forecast é um objeto com as propriedades date e weather com seus respectivos tipos.
+
+const orLogWeather = (forecast: { date: Date, weather: string }): void => {
+  console.log(forecast.date, forecast.weather);
+}
+
+________ Equivalente: Utilizando o mesmo objeto todayWeather!
+
+-> Interface:
+
+interface Forecast {
+  date: Date,
+  weather: string
+}
+
+* forecast é um objeto com interface de Forecast, e Forecast é define um objeto
+com as propriedades date e weather com seus respectivos tipos.
+
+const eqlogWeather = (forecast: Forecast): void => {
+  console.log(forecast.date, forecast.weather);
+};
+
+________ Equivalente: Utilizando destructuring!
+
+const desLogWeather = ({ date, weather }: { date: Date, weather: string }): void => {
+  console.log(date, weather);
+}
+
+- Desta forma, está utilizando o padrão de desestruturacão mas tipando exatamente
+o que está sendo desestruturado: 'date e weather'. Definindo seus tipo: 
+  - date: Date,
+  - weather: string.
+
+--- 
+
