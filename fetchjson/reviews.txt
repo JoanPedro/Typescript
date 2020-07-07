@@ -125,4 +125,10 @@ o que está sendo desestruturado: 'date e weather'. Definindo seus tipo:
 
 ________________________________________________________________________________
 
--> Objeto
+-> Tuples
+
+- const pepsi: [string, boolean, number] = ['brown', true, 40];
+  - Com esta tipagem para a variável 'pepsi', transforma-a em uma tuple. Impedindo
+  que diferentes tipos nas específicas posições do 'array' sejam adicionados.
+  - Desta forma, fixando que as respectivas posições do array representa somente
+  um único tipo.
