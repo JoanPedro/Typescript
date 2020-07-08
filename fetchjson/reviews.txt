@@ -174,3 +174,20 @@ interface para objetos, só que para classes.
   - Método protected -> Este método (função) pode ser chamado por outros métodos
     desta classe, ou por outros métodos na classes filho (Ex: Car extends Vehicle, 
     método acessível tanto para Car quanto p  ara Vehicle).
+- Propriedades das classes:
+  Igualmente aos métodos:
+    - constructor(public color: string = 'Red') { }
+      -> A Propriedade pode ser acessada fora desta classes;
+    - constructor(private color: string = 'Red') { }
+      -> A Propriedade só pode ser acessada dentro da classe;
+    - constructor(protected color: string = 'Red') { }
+      -> A Propriedade pode ser acessada dentro da classes e suas subclasses ( No 
+      caso: Classes filhas que são usada com 'extends' => Car extends Vehicle).
+    OBS: constructor(public color: string = 'Red') { } é Equivalente á:
+      => {
+        const color: string = 'Red';
+        constructor(color: string) {
+          this.color = color;
+        }
+      }
+ 
