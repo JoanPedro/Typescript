@@ -166,4 +166,11 @@ interface para objetos, só que para classes.
       }
       Desta forma o método drive que anteriormente printava chugga chugga, agora
       irá printar 'Vrooom...'
-  -
+- Métodos das classes:
+  - Método public -> Este método (funçao) pode ser chamado em qualquer lugar a 
+    qualquer momento fora da classe;
+  - Método private -> Este método (função) só pode ser chamado por outros métodos 
+    dentro desta classe;
+  - Método protected -> Este método (função) pode ser chamado por outros métodos
+    desta classe, ou por outros métodos na classes filho (Ex: Car extends Vehicle, 
+    método acessível tanto para Car quanto p  ara Vehicle).
