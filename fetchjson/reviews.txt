@@ -190,4 +190,13 @@ interface para objetos, só que para classes.
           this.color = color;
         }
       }
- 
+- Super
+  - Quando declaro um constructor em uma subclasse (Filho), é necessário passar 
+  'super()' para o constructor da subclasse. Esse 'super()' refere-se à exatamente
+  o constructor da Classe Pai. 
+    Ex: -> 'color' pertence à classe Vehicle, não precisando de 'public/private/protected'
+    class Car extends Vehicle {
+      constructor( public wheels: number, color: string) {
+        super(color)...
+      }
+    }
