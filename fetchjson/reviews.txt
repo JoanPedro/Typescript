@@ -200,3 +200,4 @@ interface para objetos, só que para classes.
         super(color)...
       }
     }
+--> --> --> Interfaces + Classes = Como nos obtemos códigos fortemente reutilizáveis em TS.
