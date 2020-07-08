@@ -132,3 +132,38 @@ ________________________________________________________________________________
   que diferentes tipos nas específicas posições do 'array' sejam adicionados.
   - Desta forma, fixando que as respectivas posições do array representa somente
   um único tipo.
+
+________________________________________________________________________________
+
+-> Classes
+
+class Vehicle {
+  drive(): void {
+    console.log('chugga chugga');
+  }
+
+  honk(): void {
+    console.log('beep')
+  }
+}
+
+class Car extends Vehicle{
+  
+}
+
+- Quando você extende a classe Car com a classe Vehicle, isso implica que a Classes
+car terá os mesmos conteúdos (neste caso, métodos) de Vehicle intríseco a ela,
+evitando principalmente a cópia de códigos. Deve ser interpretado como se fosse uma
+interface para objetos, só que para classes.
+  - Interface --> Objetos <=> Extends --> Classes
+  - Apesar de uma classes extender outra e herdar suas características (Métodos),
+  é possível que a classe filha sobrescreva a classe pai.
+    - Ex: 
+      class Car extends Vehicle {
+        drive(): void {
+          console.log('Vrooom...');
+        }
+      }
+      Desta forma o método drive que anteriormente printava chugga chugga, agora
+      irá printar 'Vrooom...'
+  -
