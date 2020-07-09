@@ -1,12 +1,30 @@
+import { Company } from './Company';
+import { User } from './User';
+
 export class CustomMap {
-  googleMap: google.maps.Map;
-  constructor(divId: string) {
-    this.googleMap = new google.maps.Map(document.getElementById(divId), {
+  private googleMap: google.maps.Map;
+
+  constructor(divID: string) {
+    this.googleMap = new google.maps.Map(document.getElementById(divID), {
       zoom: 1,
       center: {
         lat: 0,
         lng: 0
       }
     });
+  }
+
+  addUserMarker(user: User): void {
+    new google.maps.Marker({
+      map: this.googleMap,
+      position: {
+        lat: user.location.lat,
+        lng: user.location.lng,
+      }
+    });
+  }
+
+  companyMarker(company: Company): void {
+
   }
 }
