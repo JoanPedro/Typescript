@@ -201,3 +201,6 @@ interface para objetos, só que para classes.
       }
     }
 --> --> --> Interfaces + Classes = Como nos obtemos códigos fortemente reutilizáveis em TS.
+
+-> Se colocar uma classe com interface de outras duas, só serão permitido o uso
+das propriedades e métodos comuns as duas.
