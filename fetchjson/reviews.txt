@@ -204,3 +204,32 @@ interface para objetos, só que para classes.
 
 -> Se colocar uma classe com interface de outras duas, só serão permitido o uso
 das propriedades e métodos comuns as duas.
+
+________________________________________________________________________________
+
+interface Person {
+  name: string,
+  age: number
+}
+
+-> Implements: 
+1. Class User implements Person {  
+  constructor(
+    public age: number,
+    public name: string
+  )
+}
+2. Class User implements Person {  
+  constructor() {
+    this.age = age;
+    this.name = name;
+  }
+}
+3. Class User implements Person {  
+  age: number = 22;
+  name: string = 'Joan'
+  constructor() {}
+}
+
+  - A classes implementa a interface, e deve declarar todos as propriedades contidas
+  na interface implementada.
