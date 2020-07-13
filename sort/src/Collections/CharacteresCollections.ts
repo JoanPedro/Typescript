@@ -1,7 +1,7 @@
 export class CharactersColletion {
   constructor(public data: string) { }
 
-  get lengh(): number {
+  get length(): number {
     return this.data.length;
   }
 
