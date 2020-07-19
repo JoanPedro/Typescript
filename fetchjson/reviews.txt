@@ -248,3 +248,16 @@ ________________________________________________________________________________
 
   1. o Tipo da classe <Type> define um tipo genérico para ela. Podendo assumir qualquer
     tipo padrão (number, string...);
+  Ex. new ArrayOfAnything<string>(['a', 'b', 'c']);
+
+2. function printAnything<Type>(arr: Type[]): void {
+  arr.forEach(elem => console.log(elem));
+}
+  1. Da mesma forma que a 'class', o <Type> define um tipo genérico para a função. Podendo assumir 
+    qualqur padrão (number, string...);
+  Ex. printAnything<string>(['a', 'b']);
+
+2.1. const printAnythingArrow = <Type>(arr: Type[]): void => {
+  arr.forEach(elem => console.log(elem));
+}
+  1. Semelhante ao item 2. só que em formato de Arrow Function.
