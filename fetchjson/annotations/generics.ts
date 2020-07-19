@@ -89,3 +89,6 @@ const printHousesOrCars = <Type extends Printable>(arr: Type[]): void => {
 }
 
 printHousesOrCars([new House, new Car]);
+printHousesOrCars<House>([new House]);
+printHousesOrCars<Car>([new Car]);
+printHousesOrCars<House | Car>([new Car, new House]);
