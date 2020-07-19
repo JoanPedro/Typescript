@@ -233,3 +233,18 @@ interface Person {
 
   - A classes implementa a interface, e deve declarar todos as propriedades contidas
   na interface implementada.
+
+________________________________________________________________________________
+
+-> Generics: 
+
+1. class ArrayOfAnyThing<Type> {
+  constructor(public collection: Type) {}
+
+  get(index: number): Type {
+    return this.collection[index];
+  }
+}
+
+  1. o Tipo da classe <Type> define um tipo genérico para ela. Podendo assumir qualquer
+    tipo padrão (number, string...);
