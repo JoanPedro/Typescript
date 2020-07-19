@@ -65,3 +65,27 @@ printStringsArrow(['c', 'd']);
 
 printAnythingArrow<number>([4, 5, 6]);
 printNumbersArrow([1, 2, 3]);
+
+// Generics Constrains
+
+class Car {
+  print() {
+    console.log("I am a car.");
+  }
+}
+
+class House {
+  print() {
+    console.log("I am a house.");
+  }
+}
+
+interface Printable {
+  print(): void;
+}
+
+const printHousesOrCars = <Type extends Printable>(arr: Type[]): void => {
+  arr.forEach(elem => elem.print())
+}
+
+printHousesOrCars([new House, new Car]);

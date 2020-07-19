@@ -261,3 +261,23 @@ ________________________________________________________________________________
   arr.forEach(elem => console.log(elem));
 }
   1. Semelhante ao item 2. só que em formato de Arrow Function.
+
+3. Um tipo genérico também pode ser extendido por uma interface:
+
+  interface Printable {
+    print(): void;
+  }
+
+  const printHousesOrCars = <Type extends Printable>(arr: Type[]): void => {
+    arr.forEach(elem => elem.print())
+  }
+
+  1. Desta forma, o Tipo genérico (<Type>) que não conhecia o método 'print()', agora conhece devido
+    a extenção para a interface 'Printable'.
+  2. Com a chamada: printHousesOrCars([]), o array passado como parâmentro só irá aceitar receber índices
+    que possuam o método 'print()', devido a extensão do Type para Printable. Logo, caso chamado da forma
+    printHousesOrCars([1, 2, 3]) será arremessado um Error, devido o tipo number[] não satisfazer a interface
+    Printable. Sendo assim, o correto seria passar um Classe que possui um método 'print()':
+    printHousesOrCars([new House, new Car]).
+
+4.
