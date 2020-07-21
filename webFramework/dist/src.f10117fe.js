@@ -140,6 +140,8 @@ function () {
     Object.assign(this.data, update);
   };
 
+  User.prototype.on = function (eventName, callback) {};
+
   return User;
 }();
 
@@ -153,10 +155,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var User_1 = require("./models/User");
 
-var user = new User_1.User({
-  name: 'Joan Pedro',
-  age: 20
-});
+var user = new User_1.User({});
 console.log("\n  Nome: " + user.get('name') + ",\n  Idade: " + user.get('age') + "\n");
 user.set({
   name: 'Joan de Souza',
@@ -191,7 +190,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39143" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35235" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
