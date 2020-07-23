@@ -1,6 +1,1 @@
-import axios from 'axios';
-
-axios.post('http://localhost:3000/users', {
-  name: 'Joan Pedro',
-  age: 20
-});
+ import { User } from './models/User';

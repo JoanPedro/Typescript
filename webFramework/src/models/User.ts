@@ -7,7 +7,7 @@ interface UserProps {
 }
 
 type Callback = () => void
-// type Callback = () => void
+// type Callback = () => {}
 
 export class User {
   events: { [key: string]: Callback[] } = {};
@@ -43,5 +43,14 @@ export class User {
       .then((response: AxiosResponse): void => {
         this.set(response.data);
       });
+  }
+
+  save(): void {
+    const id: string | number = this.get('id');
+    if(id) {
+      axios.put(`http://localhost:3000/users/${id}`, this.data);
+    } else {
+      axios.post('http://localhost:3000/users', this.data);
+    }
   }
 }

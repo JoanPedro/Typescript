@@ -1,9 +1,14 @@
 {
   "users": [
     {
+      "id": 1,
       "name": "Joan Pedro",
-      "age": 20,
-      "id": 1
+      "age": 23
+    },
+    {
+      "id": 2,
+      "name": "Raiana Soveral",
+      "age": 22
     }
   ]
 }
