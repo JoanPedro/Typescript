@@ -1,4 +1,3 @@
-
 type Callback = () => void
 // type Callback = () => {}
 
