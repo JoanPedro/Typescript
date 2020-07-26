@@ -9,3 +9,7 @@ export class Attributes<Type> {
     Object.assign(this.data, update);
   }
 }
+
+// const arrowFunciton = (elements: string[]): string[] => {
+//   return elements.map( element => element + 'Arrow');
+// }
