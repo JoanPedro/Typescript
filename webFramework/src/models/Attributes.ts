@@ -1,8 +1,8 @@
 export class Attributes<Type> {
   constructor(private data: Type) {}
 
-  get(propName: string): (string | number | boolean) {
-    return this.data[propName];
+  get<ObjKey extends keyof Type>(key: ObjKey): Type[ObjKey] {
+    return this.data[key];
   }
   
   set(update: Type): void {

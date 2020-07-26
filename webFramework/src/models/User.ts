@@ -7,7 +7,7 @@ export interface UserProps {
   age?: number;
 }
 
-const rootUrl = ';http://localhost:3000/users';
+const rootUrl = 'http://localhost:3000/users';
 
 export class User {
   public events: Eventing = new Eventing();
