@@ -8,6 +8,10 @@ export class Attributes<Type> {
   set = (update: Type): void => {
     Object.assign(this.data, update);
   }
+
+  getAll = (): Type => {
+    return this.data;
+  }
 }
 
 // const arrowFunciton = (elements: string[]): string[] => {
