@@ -15,7 +15,7 @@ export class Sync<Type extends HasId> {
     const { id }: HasId = data;
 
     if(id) {
-      return axios.put(`http://localhost:3000/users/${id}`, data);
+      return axios.put(`${this.rootUrl}/${id}`, data);
     } else {
       return axios.post(this.rootUrl, data);
     }

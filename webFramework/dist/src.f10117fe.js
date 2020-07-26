@@ -1946,7 +1946,7 @@ var Sync = function Sync(rootUrl) {
     var id = data.id;
 
     if (id) {
-      return axios_1.default.put("http://localhost:3000/users/".concat(id), data);
+      return axios_1.default.put("".concat(_this.rootUrl, "/").concat(id), data);
     } else {
       return axios_1.default.post(_this.rootUrl, data);
     }
@@ -2007,22 +2007,38 @@ var rootUrl = 'http://localhost:3000/users';
 
 var User = /*#__PURE__*/function () {
   function User(data) {
+    var _this = this;
+
     _classCallCheck(this, User);
 
     this.events = new Eventing_1.Eventing();
     this.sync = new Sync_1.Sync(rootUrl);
+
+    this.set = function (update) {
+      _this.attributes.set(update);
+
+      _this.events.trigger('change');
+    };
+
+    this.fetch = function () {
+      var id = _this.get('id'); // User.get('id')
+
+
+      if (typeof id !== 'number') {
+        throw new Error('Cannot fetch without an id!');
+      }
+
+      _this.sync.fetch(id).then(function (response) {
+        _this.set(response.data);
+      });
+    };
+
     this.attributes = new Attributes_1.Attributes(data);
   } // Retorna os ponteiros das funções, não invocando-as inicialmente. Deixando para quem criou a instância
   // de 'User' esta responsabilidade.
 
 
   _createClass(User, [{
-    key: "set",
-    value: function set(update) {
-      this.attributes.set(update);
-      this.events.trigger('change');
-    }
-  }, {
     key: "on",
     get: function get() {
       return this.events.on;
@@ -2053,16 +2069,12 @@ Object.defineProperty(exports, "__esModule", {
 var User_1 = require("./models/User");
 
 var user = new User_1.User({
-  name: 'new record',
-  age: 0
+  id: 1
 });
-console.log(user.get('name'));
 user.on('change', function () {
-  console.log('User was changed!');
+  console.log(user);
 });
-user.set({
-  name: 'New Name'
-});
+user.fetch();
 },{"./models/User":"src/models/User.ts"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -2091,7 +2103,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42267" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44705" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
