@@ -2017,6 +2017,12 @@ var User = /*#__PURE__*/function () {
 
 
   _createClass(User, [{
+    key: "set",
+    value: function set(update) {
+      this.attributes.set(update);
+      this.events.trigger('change');
+    }
+  }, {
     key: "on",
     get: function get() {
       return this.events.on;
@@ -2054,7 +2060,9 @@ console.log(user.get('name'));
 user.on('change', function () {
   console.log('User was changed!');
 });
-user.trigger('change');
+user.set({
+  name: 'New Name'
+});
 },{"./models/User":"src/models/User.ts"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -2083,7 +2091,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45273" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42267" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
