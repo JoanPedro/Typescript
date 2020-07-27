@@ -12,11 +12,15 @@ export interface UserProps {
 const rootUrl = 'http://localhost:3000/users';
 
 export class User extends Model<UserProps>{ // this === User
-  static buildBuild(attrs: UserProps): User {
+  static buildUser = (attrs: UserProps): User => {
     return new User(
       new Attributes(attrs),
       new Eventing(),
       new ApiSync<UserProps>(rootUrl)
     )
+  }
+
+  isAdminUser = (): boolean => {
+    return this.get('id') === 1;
   }
 }

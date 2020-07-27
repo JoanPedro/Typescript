@@ -1,6 +1,6 @@
 import { AxiosPromise, AxiosResponse } from "axios";
 
-type Callback = () => {}
+type Callback = () => void
 
 interface HasId {
   id?: number
