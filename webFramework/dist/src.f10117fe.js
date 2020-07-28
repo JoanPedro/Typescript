@@ -117,7 +117,93 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/models/Eventing.ts":[function(require,module,exports) {
+})({"src/models/Model.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Model = void 0;
+
+var Model = function Model(attributes, events, sync) {
+  var _this = this;
+
+  _classCallCheck(this, Model);
+
+  this.attributes = attributes;
+  this.events = events;
+  this.sync = sync; // Retorna os ponteiros das funções, não invocando-as inicialmente. Deixando para quem criou a instância
+  // de 'User' esta responsabilidade.
+
+  this.on = this.events.on;
+  this.trigger = this.events.trigger;
+  this.get = this.attributes.get;
+
+  this.set = function (update) {
+    _this.attributes.set(update);
+
+    _this.events.trigger('change');
+  };
+
+  this.fetch = function () {
+    var id = _this.get('id'); // User.get('id')
+
+
+    if (typeof id !== 'number') {
+      throw new Error('Cannot fetch without an id!');
+    }
+
+    _this.sync.fetch(id).then(function (response) {
+      _this.set(response.data);
+    });
+  };
+
+  this.save = function () {
+    _this.sync.save(_this.attributes.getAll()).then(function (response) {
+      _this.trigger('save');
+    }).then(function (error) {
+      _this.trigger('error');
+    });
+  };
+};
+
+exports.Model = Model;
+},{}],"src/models/Attributes.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Attributes = void 0;
+
+var Attributes = function Attributes(data) {
+  var _this = this;
+
+  _classCallCheck(this, Attributes);
+
+  this.data = data;
+
+  this.get = function (key) {
+    return _this.data[key];
+  };
+
+  this.set = function (update) {
+    Object.assign(_this.data, update);
+  };
+
+  this.getAll = function () {
+    return _this.data;
+  };
+};
+
+exports.Attributes = Attributes; // const arrowFunciton = (elements: string[]): string[] => {
+//   return elements.map( element => element + 'Arrow');
+// }
+},{}],"src/models/Eventing.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1913,7 +1999,7 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults.js","./cancel/Cancel":"node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/Sync.ts":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/ApiSync.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1927,14 +2013,14 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Sync = void 0;
+exports.ApiSync = void 0;
 
 var axios_1 = __importDefault(require("axios"));
 
-var Sync = function Sync(rootUrl) {
+var ApiSync = function ApiSync(rootUrl) {
   var _this = this;
 
-  _classCallCheck(this, Sync);
+  _classCallCheck(this, ApiSync);
 
   this.rootUrl = rootUrl;
 
@@ -1953,42 +2039,84 @@ var Sync = function Sync(rootUrl) {
   };
 };
 
-exports.Sync = Sync;
-},{"axios":"node_modules/axios/index.js"}],"src/models/Attributes.ts":[function(require,module,exports) {
+exports.ApiSync = ApiSync;
+},{"axios":"node_modules/axios/index.js"}],"src/models/User.ts":[function(require,module,exports) {
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Attributes = void 0;
+exports.User = void 0;
 
-var Attributes = function Attributes(data) {
-  var _this = this;
+var Model_1 = require("./Model");
 
-  _classCallCheck(this, Attributes);
+var Attributes_1 = require("./Attributes");
 
-  this.data = data;
+var Eventing_1 = require("./Eventing");
 
-  this.get = function (key) {
-    return _this.data[key];
-  };
+var ApiSync_1 = require("./ApiSync");
 
-  this.set = function (update) {
-    Object.assign(_this.data, update);
-  };
+var rootUrl = 'http://localhost:3000/users';
 
-  this.getAll = function () {
-    return _this.data;
-  };
+var User = /*#__PURE__*/function (_Model_1$Model) {
+  _inherits(User, _Model_1$Model);
+
+  var _super = _createSuper(User);
+
+  function User() {
+    var _this;
+
+    _classCallCheck(this, User);
+
+    _this = _super.apply(this, arguments);
+
+    _this.isAdminUser = function () {
+      return _this.get('id') === 1;
+    };
+
+    return _this;
+  }
+
+  return User;
+}(Model_1.Model);
+
+exports.User = User;
+
+User.buildUser = function (attrs) {
+  return new User(new Attributes_1.Attributes(attrs), new Eventing_1.Eventing(), new ApiSync_1.ApiSync(rootUrl));
 };
-
-exports.Attributes = Attributes; // const arrowFunciton = (elements: string[]): string[] => {
-//   return elements.map( element => element + 'Arrow');
-// }
-},{}],"src/models/User.ts":[function(require,module,exports) {
+},{"./Model":"src/models/Model.ts","./Attributes":"src/models/Attributes.ts","./Eventing":"src/models/Eventing.ts","./ApiSync":"src/models/ApiSync.ts"}],"src/models/Collection.ts":[function(require,module,exports) {
 "use strict";
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1996,61 +2124,46 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.User = void 0;
+exports.Collection = void 0;
+
+var User_1 = require("./User");
 
 var Eventing_1 = require("./Eventing");
 
-var Sync_1 = require("./Sync");
+var axios_1 = __importDefault(require("axios"));
 
-var Attributes_1 = require("./Attributes");
-
-var rootUrl = 'http://localhost:3000/users';
-
-var User = /*#__PURE__*/function () {
-  function User(data) {
+var Collection = /*#__PURE__*/function () {
+  function Collection(rootUrl) {
     var _this = this;
 
-    _classCallCheck(this, User);
+    _classCallCheck(this, Collection);
 
+    this.rootUrl = rootUrl;
+    this.models = [];
     this.events = new Eventing_1.Eventing();
-    this.sync = new Sync_1.Sync(rootUrl);
-
-    this.set = function (update) {
-      _this.attributes.set(update);
-
-      _this.events.trigger('change');
-    };
 
     this.fetch = function () {
-      var id = _this.get('id'); // User.get('id')
-
-
-      if (typeof id !== 'number') {
-        throw new Error('Cannot fetch without an id!');
-      }
-
-      _this.sync.fetch(id).then(function (response) {
-        _this.set(response.data);
+      axios_1.default.get(_this.rootUrl).then(function (response) {
+        response.data.forEach(function (value) {
+          var user = User_1.User.buildUser(value);
+          _this.models = [].concat(_toConsumableArray(_this.models), [user]);
+        });
       });
+
+      _this.trigger('change');
     };
+  }
 
-    this.save = function () {
-      _this.sync.save(_this.attributes.getAll()).then(function (response) {
-        _this.trigger('save');
-      }).then(function (error) {
-        _this.trigger('error');
-      });
-    };
-
-    this.attributes = new Attributes_1.Attributes(data);
-  } // Retorna os ponteiros das funções, não invocando-as inicialmente. Deixando para quem criou a instância
-  // de 'User' esta responsabilidade.
-
-
-  _createClass(User, [{
+  _createClass(Collection, [{
     key: "on",
     get: function get() {
       return this.events.on;
@@ -2060,36 +2173,27 @@ var User = /*#__PURE__*/function () {
     get: function get() {
       return this.events.trigger;
     }
-  }, {
-    key: "get",
-    get: function get() {
-      return this.attributes.get;
-    }
   }]);
 
-  return User;
+  return Collection;
 }();
 
-exports.User = User;
-},{"./Eventing":"src/models/Eventing.ts","./Sync":"src/models/Sync.ts","./Attributes":"src/models/Attributes.ts"}],"src/index.ts":[function(require,module,exports) {
+exports.Collection = Collection;
+},{"./User":"src/models/User.ts","./Eventing":"src/models/Eventing.ts","axios":"node_modules/axios/index.js"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var User_1 = require("./models/User");
+var Collection_1 = require("./models/Collection");
 
-var user = new User_1.User({
-  id: 1,
-  name: 'Joan de Souza',
-  age: 22
+var collection = new Collection_1.Collection('http://localhost:3000/users');
+collection.on('change', function () {
+  console.log(collection);
 });
-user.on('save', function () {
-  console.log(user);
-});
-user.save();
-},{"./models/User":"src/models/User.ts"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+collection.fetch();
+},{"./models/Collection":"src/models/Collection.ts"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2117,7 +2221,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40967" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43215" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
