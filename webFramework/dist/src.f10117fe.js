@@ -117,7 +117,93 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/models/Eventing.ts":[function(require,module,exports) {
+})({"src/models/Model.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Model = void 0;
+
+var Model = function Model(attributes, events, sync) {
+  var _this = this;
+
+  _classCallCheck(this, Model);
+
+  this.attributes = attributes;
+  this.events = events;
+  this.sync = sync; // Retorna os ponteiros das funções, não invocando-as inicialmente. Deixando para quem criou a instância
+  // de 'User' esta responsabilidade.
+
+  this.on = this.events.on;
+  this.trigger = this.events.trigger;
+  this.get = this.attributes.get;
+
+  this.set = function (update) {
+    _this.attributes.set(update);
+
+    _this.events.trigger('change');
+  };
+
+  this.fetch = function () {
+    var id = _this.get('id'); // User.get('id')
+
+
+    if (typeof id !== 'number') {
+      throw new Error('Cannot fetch without an id!');
+    }
+
+    _this.sync.fetch(id).then(function (response) {
+      _this.set(response.data);
+    });
+  };
+
+  this.save = function () {
+    _this.sync.save(_this.attributes.getAll()).then(function (response) {
+      _this.trigger('save');
+    }).then(function (error) {
+      _this.trigger('error');
+    });
+  };
+};
+
+exports.Model = Model;
+},{}],"src/models/Attributes.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Attributes = void 0;
+
+var Attributes = function Attributes(data) {
+  var _this = this;
+
+  _classCallCheck(this, Attributes);
+
+  this.data = data;
+
+  this.get = function (key) {
+    return _this.data[key];
+  };
+
+  this.set = function (update) {
+    Object.assign(_this.data, update);
+  };
+
+  this.getAll = function () {
+    return _this.data;
+  };
+};
+
+exports.Attributes = Attributes; // const arrowFunciton = (elements: string[]): string[] => {
+//   return elements.map( element => element + 'Arrow');
+// }
+},{}],"src/models/Eventing.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1913,7 +1999,48 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults.js","./cancel/Cancel":"node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/Collection.ts":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/ApiSync.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ApiSync = void 0;
+
+var axios_1 = __importDefault(require("axios"));
+
+var ApiSync = function ApiSync(rootUrl) {
+  var _this = this;
+
+  _classCallCheck(this, ApiSync);
+
+  this.rootUrl = rootUrl;
+
+  this.fetch = function (id) {
+    return axios_1.default.get("".concat(_this.rootUrl, "/").concat(id));
+  };
+
+  this.save = function (data) {
+    var id = data.id;
+
+    if (id) {
+      return axios_1.default.put("".concat(_this.rootUrl, "/").concat(id), data);
+    } else {
+      return axios_1.default.post(_this.rootUrl, data);
+    }
+  };
+};
+
+exports.ApiSync = ApiSync;
+},{"axios":"node_modules/axios/index.js"}],"src/models/Collection.ts":[function(require,module,exports) {
 "use strict";
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -1987,134 +2114,7 @@ var Collection = /*#__PURE__*/function () {
 }();
 
 exports.Collection = Collection;
-},{"./Eventing":"src/models/Eventing.ts","axios":"node_modules/axios/index.js"}],"src/models/Model.ts":[function(require,module,exports) {
-"use strict";
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Model = void 0;
-
-var Model = function Model(attributes, events, sync) {
-  var _this = this;
-
-  _classCallCheck(this, Model);
-
-  this.attributes = attributes;
-  this.events = events;
-  this.sync = sync; // Retorna os ponteiros das funções, não invocando-as inicialmente. Deixando para quem criou a instância
-  // de 'User' esta responsabilidade.
-
-  this.on = this.events.on;
-  this.trigger = this.events.trigger;
-  this.get = this.attributes.get;
-
-  this.set = function (update) {
-    _this.attributes.set(update);
-
-    _this.events.trigger('change');
-  };
-
-  this.fetch = function () {
-    var id = _this.get('id'); // User.get('id')
-
-
-    if (typeof id !== 'number') {
-      throw new Error('Cannot fetch without an id!');
-    }
-
-    _this.sync.fetch(id).then(function (response) {
-      _this.set(response.data);
-    });
-  };
-
-  this.save = function () {
-    _this.sync.save(_this.attributes.getAll()).then(function (response) {
-      _this.trigger('save');
-    }).then(function (error) {
-      _this.trigger('error');
-    });
-  };
-};
-
-exports.Model = Model;
-},{}],"src/models/Attributes.ts":[function(require,module,exports) {
-"use strict";
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Attributes = void 0;
-
-var Attributes = function Attributes(data) {
-  var _this = this;
-
-  _classCallCheck(this, Attributes);
-
-  this.data = data;
-
-  this.get = function (key) {
-    return _this.data[key];
-  };
-
-  this.set = function (update) {
-    Object.assign(_this.data, update);
-  };
-
-  this.getAll = function () {
-    return _this.data;
-  };
-};
-
-exports.Attributes = Attributes; // const arrowFunciton = (elements: string[]): string[] => {
-//   return elements.map( element => element + 'Arrow');
-// }
-},{}],"src/models/ApiSync.ts":[function(require,module,exports) {
-"use strict";
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.ApiSync = void 0;
-
-var axios_1 = __importDefault(require("axios"));
-
-var ApiSync = function ApiSync(rootUrl) {
-  var _this = this;
-
-  _classCallCheck(this, ApiSync);
-
-  this.rootUrl = rootUrl;
-
-  this.fetch = function (id) {
-    return axios_1.default.get("".concat(_this.rootUrl, "/").concat(id));
-  };
-
-  this.save = function (data) {
-    var id = data.id;
-
-    if (id) {
-      return axios_1.default.put("".concat(_this.rootUrl, "/").concat(id), data);
-    } else {
-      return axios_1.default.post(_this.rootUrl, data);
-    }
-  };
-};
-
-exports.ApiSync = ApiSync;
-},{"axios":"node_modules/axios/index.js"}],"src/models/User.ts":[function(require,module,exports) {
+},{"./Eventing":"src/models/Eventing.ts","axios":"node_modules/axios/index.js"}],"src/models/User.ts":[function(require,module,exports) {
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -2148,6 +2148,8 @@ var Eventing_1 = require("./Eventing");
 
 var ApiSync_1 = require("./ApiSync");
 
+var Collection_1 = require("./Collection");
+
 var rootUrl = 'http://localhost:3000/users';
 
 var User = /*#__PURE__*/function (_Model_1$Model) {
@@ -2177,25 +2179,27 @@ exports.User = User;
 User.buildUser = function (attrs) {
   return new User(new Attributes_1.Attributes(attrs), new Eventing_1.Eventing(), new ApiSync_1.ApiSync(rootUrl));
 };
-},{"./Model":"src/models/Model.ts","./Attributes":"src/models/Attributes.ts","./Eventing":"src/models/Eventing.ts","./ApiSync":"src/models/ApiSync.ts"}],"src/index.ts":[function(require,module,exports) {
+
+User.buildUserCollection = function () {
+  return new Collection_1.Collection(rootUrl, function (json) {
+    return User.buildUser(json);
+  });
+};
+},{"./Model":"src/models/Model.ts","./Attributes":"src/models/Attributes.ts","./Eventing":"src/models/Eventing.ts","./ApiSync":"src/models/ApiSync.ts","./Collection":"src/models/Collection.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var Collection_1 = require("./models/Collection");
-
 var User_1 = require("./models/User");
 
-var collection = new Collection_1.Collection('http://localhost:3000/users', function (json) {
-  return User_1.User.buildUser(json);
-});
+var collection = User_1.User.buildUserCollection();
 collection.on('change', function () {
   console.log(collection);
 });
 collection.fetch();
-},{"./models/Collection":"src/models/Collection.ts","./models/User":"src/models/User.ts"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./models/User":"src/models/User.ts"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2223,7 +2227,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35043" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45127" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
