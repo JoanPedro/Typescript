@@ -169,7 +169,7 @@ var UserForm = /*#__PURE__*/function () {
     };
 
     this.onSetAgeClick = function () {
-      console.log('button was clicked!');
+      _this.model.setRandomAge();
     };
 
     this.bindEvents = function (fragment) {
@@ -2260,6 +2260,14 @@ var User = /*#__PURE__*/function (_Model_1$Model) {
 
     _this = _super.apply(this, arguments);
 
+    _this.setRandomAge = function () {
+      var age = Math.round(Math.random() * 100);
+
+      _this.set({
+        age: age
+      });
+    };
+
     _this.isAdminUser = function () {
       return _this.get('id') === 1;
     };
@@ -2294,7 +2302,7 @@ var User_1 = require("./models/User");
 
 var user = User_1.User.buildUser({
   name: 'NAME',
-  age: '20'
+  age: 20
 });
 var userForm = new UserForm_1.UserForm(document.getElementById('root'), user);
 userForm.render();
@@ -2326,7 +2334,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33025" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44895" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
