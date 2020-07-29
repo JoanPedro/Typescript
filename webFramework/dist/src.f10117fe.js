@@ -152,6 +152,12 @@ var UserForm = /*#__PURE__*/function () {
     this.parent = parent;
     this.model = model;
 
+    this.bindModel = function () {
+      _this.model.on('change', function () {
+        _this.render();
+      });
+    };
+
     this.eventsMap = function () {
       return {
         'click:button': _this.onButtonClick,
@@ -192,6 +198,8 @@ var UserForm = /*#__PURE__*/function () {
         _loop(eventKey);
       }
     };
+
+    this.bindModel();
   }
 
   _createClass(UserForm, [{
@@ -202,6 +210,7 @@ var UserForm = /*#__PURE__*/function () {
   }, {
     key: "render",
     value: function render() {
+      this.parent.innerHTML = '';
       var templateElement = document.createElement('template');
       templateElement.innerHTML = this.template();
       this.bindEvents(templateElement.content);
