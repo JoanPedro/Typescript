@@ -155,7 +155,8 @@ var UserForm = /*#__PURE__*/function () {
     this.eventsMap = function () {
       return {
         'click:button': _this.onButtonClick,
-        'mouseenter:h1': _this.onHeaderHover
+        'mouseenter:h1': _this.onHeaderHover,
+        'click:.set-age': _this.onSetAgeClick
       };
     };
 
@@ -165,6 +166,10 @@ var UserForm = /*#__PURE__*/function () {
 
     this.onHeaderHover = function () {
       console.log('Hovering!');
+    };
+
+    this.onSetAgeClick = function () {
+      console.log('button was clicked!');
     };
 
     this.bindEvents = function (fragment) {
@@ -192,7 +197,7 @@ var UserForm = /*#__PURE__*/function () {
   _createClass(UserForm, [{
     key: "template",
     value: function template() {
-      return "\n      <div> \n        <h1>User form</h1>\n        <div> User name: ".concat(this.model.get('name'), " </div>\n        <div> User age: ").concat(this.model.get('age'), " </div>\n        <input />\n        <button> Click-me! </button>\n      </>\n    ");
+      return "\n      <div> \n        <h1>User form</h1>\n        <div> User name: ".concat(this.model.get('name'), " </div>\n        <div> User age: ").concat(this.model.get('age'), " </div>\n        <input />\n        <button> Click-me! </button>\n        <button class=\"set-age\"> Set Random Age </button>\n      </>\n    ");
     }
   }, {
     key: "render",
@@ -2321,7 +2326,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36793" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33025" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
