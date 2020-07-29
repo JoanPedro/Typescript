@@ -1,5 +1,17 @@
+type Function = () => void
+
 export class UserForm {
   constructor(public parent: Element) {}
+
+  eventsMap = (): { [key: string]: Function} => {
+    return {
+      'click:button': this.onButtonClick
+    }
+  }
+
+  onButtonClick = (): void => {
+    console.log('Hi there!');
+  }
 
   template(): string {
     return `
