@@ -35,3 +35,28 @@ router.post('/login', (req, res) => {
         return res.status(500).send(error);
     }
 });
+router.get('/', (req, res) => {
+    if (req.session && req.session.loggedIn) {
+        res.send(`
+      <div>
+        <div> You are logged in <div/>
+        <a href="/logout">Logout</a>
+      </div>
+    `);
+        return res.status(200);
+    }
+    else {
+        res.send(`
+    <div>
+      <div> You are not logged in <div/>
+      <a href="/login">Login</a>
+    </div>
+    `);
+        return res.status(200);
+    }
+});
+router.get('/logout', (req, res) => {
+    req.session = null;
+    res.redirect('/');
+    return res.status(200);
+});

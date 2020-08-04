@@ -44,4 +44,30 @@ router.post('/login', (req: Request, res: Response): Response => {
   }
 })
 
+router.get('/', (req: Request, res: Response): Response => {
+  if (req.session && req.session.loggedIn) {
+    res.send(`
+      <div>
+        <div> You are logged in <div/>
+        <a href="/logout">Logout</a>
+      </div>
+    `);
+    return res.status(200);
+  } else {
+    res.send(`
+    <div>
+      <div> You are not logged in <div/>
+      <a href="/login">Login</a>
+    </div>
+    `)
+    return res.status(200);
+  }
+})
+
+router.get('/logout', (req: Request, res: Response): Response => {
+  req.session = null;
+  res.redirect('/');
+  return res.status(200);
+})
+
 export { router }
