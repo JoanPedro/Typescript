@@ -1,5 +1,10 @@
 import { Router, Request, Response } from 'express';
 
+interface Login {
+  email: string | undefined,
+  password: string | undefined
+}
+
 const router = Router();
 
 router.get('/login', (req: Request, res: Response): Response => {
@@ -21,11 +26,18 @@ router.get('/login', (req: Request, res: Response): Response => {
 })
 
 router.post('/login', (req: Request, res: Response): Response => {
-  const { email, password }: { email: string, password: string } = req.body;
-  return res.send({
-    email,
-    password
-  })
+  try {
+    const { email, password }: Login = req.body;
+
+    if(!email) {
+      return res.status(400).json({ msg: 'Email must be provided.'})
+    }
+
+    return res.send(email.toUpperCase())
+
+  } catch (error) {
+    return res.status(500).send(error)
+  }
 })
 
 export { router }

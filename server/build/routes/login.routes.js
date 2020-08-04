@@ -20,9 +20,14 @@ router.get('/login', (req, res) => {
     `);
 });
 router.post('/login', (req, res) => {
-    const { email, password } = req.body;
-    return res.send({
-        email,
-        password
-    });
+    try {
+        const { email, password } = req.body;
+        if (!email) {
+            return res.status(400).json({ msg: 'Email must be provided.' });
+        }
+        return res.send(email.toUpperCase());
+    }
+    catch (error) {
+        return res.status(500).send(error);
+    }
 });
