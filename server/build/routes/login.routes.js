@@ -2,6 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.router = void 0;
 const express_1 = require("express");
+const requireAuth = (req, res, next) => {
+    if (!req.session || !req.session.loggedIn) {
+        res.status(403).send({ msg: 'Not permited.' });
+    }
+    next();
+    return res.status(202);
+};
 const router = express_1.Router();
 exports.router = router;
 router.get('/login', (req, res) => {
@@ -28,35 +35,39 @@ router.post('/login', (req, res) => {
             return res.status(302);
         }
         else {
-            return res.status(500).send({ msg: 'Invalid email or password' });
+            return res.status(400).send({ msg: 'Invalid email or password.' });
         }
     }
     catch (error) {
-        return res.status(500).send(error);
+        return res.status(500).send({ msg: 'Internal server error.' });
     }
 });
 router.get('/', (req, res) => {
-    if (req.session && req.session.loggedIn) {
-        res.send(`
+    try {
+        if (!req.session || !req.session.loggedIn) {
+            return res.status(200).send(`
+      <div>
+        <div> You are not logged in <div/>
+        <a href="/login">Login</a>
+      </div>
+      `);
+        }
+        return res.status(200).send(`
       <div>
         <div> You are logged in <div/>
         <a href="/logout">Logout</a>
       </div>
     `);
-        return res.status(200);
     }
-    else {
-        res.send(`
-    <div>
-      <div> You are not logged in <div/>
-      <a href="/login">Login</a>
-    </div>
-    `);
-        return res.status(200);
+    catch (error) {
+        return res.status(500).send({ msg: 'Internal server error.' });
     }
 });
 router.get('/logout', (req, res) => {
     req.session = null;
     res.redirect('/');
     return res.status(200);
+});
+router.get('/protected', requireAuth, (req, res) => {
+    return res.send('Welcome to protected route, logged user');
 });
