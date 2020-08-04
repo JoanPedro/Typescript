@@ -5,13 +5,14 @@ interface Login {
   password: string | undefined
 }
 
-const requireAuth = (req: Request, res: Response, next: NextFunction): Response => {
+const requireAuth = (req: Request, res: Response, next: NextFunction): void => {
   if(!req.session || !req.session.loggedIn) {
-    res.status(403).send({ msg: 'Not permited.'})
+    res.status(403).send({ msg: 'Not permited.'});
+    return;
   }
 
   next();
-  return res.status(202);
+  return;
 }
 
 const router = Router();
@@ -34,22 +35,23 @@ router.get('/login', (req: Request, res: Response): Response => {
   )
 })
 
-router.post('/login', (req: Request, res: Response): Response => {
+router.post('/login', (req: Request, res: Response): void => {
   try {
     const { email, password }: Login = req.body;
 
     if(email && password && email === 'teste@teste.com' && password === 'password') {
 
       req.session = { loggedIn: true };
-      res.redirect('/');
-      return res.status(302);
+      return res.status(302).redirect('/');
 
     } else {
-      return res.status(400).send({ msg: 'Invalid email or password.' })
+      res.status(400).send({ msg: 'Invalid email or password.' });
+      return;
     }
 
   } catch (error) {
-    return res.status(500).send({ msg: 'Internal server error.' })
+    res.status(500).send({ msg: 'Internal server error.' });
+    return;
   }
 })
 
@@ -76,13 +78,12 @@ router.get('/', (req: Request, res: Response): Response => {
   }
 })
 
-router.get('/logout', (req: Request, res: Response): Response => {
+router.get('/logout', (req: Request, res: Response): void => {
   req.session = null;
-  res.redirect('/');
-  return res.status(200);
+  return res.redirect('/');
 })
 
 router.get('/protected', requireAuth, (req: Request, res: Response): Response => {
-  return res.send('Welcome to protected route, logged user')
+  return res.send({ msg: 'Welcome to protected route, logged user' })
 })
 export { router }
