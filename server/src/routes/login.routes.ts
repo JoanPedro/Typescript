@@ -17,24 +17,6 @@ const requireAuth = (req: Request, res: Response, next: NextFunction): void => {
 
 const router = Router();
 
-router.get('/login', (req: Request, res: Response): Response => {
-  return res.send(
-    `
-      <form method="POST">
-        <div>
-          <label> Email </label>
-          <input name="email" />
-        </div>
-        <div>
-          <label> Password </label>
-          <input name="password" type="password" />
-        </div>
-        <button> Submit </button>
-      </form>
-    `
-  )
-})
-
 router.post('/login', (req: Request, res: Response): void => {
   try {
     const { email, password }: Login = req.body;
@@ -86,4 +68,5 @@ router.get('/logout', (req: Request, res: Response): void => {
 router.get('/protected', requireAuth, (req: Request, res: Response): Response => {
   return res.send({ msg: 'Welcome to protected route, logged user' })
 })
+
 export { router }
